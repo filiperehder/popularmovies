@@ -10,6 +10,8 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         buildConfigField "String", "API_KEY", "\"${getProperty("local.properties", "api_key")}\""
+        buildConfigField "String", "API_URL", "\"${getProperty("local.properties", "api_url")}\""
+
     }
     buildTypes {
         release {

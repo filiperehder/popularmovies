@@ -49,12 +49,12 @@ public class MovieDetailActivity extends AppCompatActivity {
         tvRating.setText(rating.toString());
 
         Picasso.get()
-                .load("http://image.tmdb.org/t/p/w300/" + backdrop)
+                .load(getResources().getString(R.string.image_path_300) + backdrop)
                 .placeholder(R.drawable.default_backdrop)
                 .into(ivBackdropMovie);
 
         Picasso.get()
-                .load("http://image.tmdb.org/t/p/w185/" + poster)
+                .load(getResources().getString(R.string.image_path_185)  + poster)
                 .placeholder(R.drawable.empty_movie)
                 .into(ivMoviePoster);
     }

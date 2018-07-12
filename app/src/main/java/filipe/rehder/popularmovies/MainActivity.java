@@ -42,11 +42,10 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
         pbLoadingMovies = findViewById(R.id.pbLoadingMovies);
         llConnectionProblem = findViewById(R.id.llConnectionProblem);
         btnConnectionError = findViewById(R.id.btnConnectionError);
-
         controller = new NetworkController();
 
         setupRecyclerView();
-        controller.onStart("popularity.desc");
+        controller.onStart(getResources().getString(R.string.filterPopularity));
     }
 
     private void setupRecyclerView() {
@@ -69,11 +68,11 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
 
         switch (id) {
             case R.id.byPopularMovies:
-                controller.onStart("popularity.desc");
+                controller.onStart(getResources().getString(R.string.filterPopularity));
                 break;
 
             case R.id.byRating:
-                controller.onStart("vote_average.desc");
+                controller.onStart(getResources().getString(R.string.filterRating));
                 break;
         }
 
