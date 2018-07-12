@@ -3,7 +3,6 @@ package filipe.rehder.popularmovies;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,6 +20,7 @@ public class MovieDetailActivity extends AppCompatActivity {
     TextView tvOverview;
     TextView tvMovieTitle;
     TextView tvReleaseDate;
+    TextView tvRating;
     ImageView ivBackdropMovie;
     ImageView ivMoviePoster;
 
@@ -31,6 +31,7 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         tvOverview = findViewById(R.id.tvOverview);
         tvMovieTitle = findViewById(R.id.tvMovieTitle);
+        tvRating = findViewById(R.id.tvRating);
         ivBackdropMovie = findViewById(R.id.ivBackdropMovie);
         ivMoviePoster = findViewById(R.id.ivMoviePoster);
         tvReleaseDate = findViewById(R.id.tvReleaseDate);
@@ -45,12 +46,11 @@ public class MovieDetailActivity extends AppCompatActivity {
         tvOverview.setText(overview);
         tvMovieTitle.setText(title);
         tvReleaseDate.setText(releaseDate);
-
-        Picasso.get().setLoggingEnabled(true);
+        tvRating.setText(rating.toString());
 
         Picasso.get()
                 .load("http://image.tmdb.org/t/p/w300/" + backdrop)
-                .placeholder(R.drawable.empty_movie)
+                .placeholder(R.drawable.default_backdrop)
                 .into(ivBackdropMovie);
 
         Picasso.get()

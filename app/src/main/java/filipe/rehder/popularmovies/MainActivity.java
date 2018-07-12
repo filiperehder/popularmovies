@@ -5,13 +5,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import java.util.ArrayList;
 import filipe.rehder.popularmovies.adapter.MoviesAdapter;
 import filipe.rehder.popularmovies.adapter.OnItemClickListener;
@@ -27,9 +26,13 @@ import retrofit2.Retrofit;
 public class MainActivity extends AppCompatActivity implements OnItemClickListener {
 
     private MoviesAdapter adapterMovies;
+    private String filterQuery;
+
     RecyclerView recyclerMovies;
     ProgressBar pbLoadingMovies;
-    TextView tvConnectionProblem;
+    LinearLayout llConnectionProblem;
+    NetworkController controller;
+    Button btnConnectionError;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,12 +40,13 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
         setContentView(R.layout.activity_main);
 
         pbLoadingMovies = findViewById(R.id.pbLoadingMovies);
-        tvConnectionProblem = findViewById(R.id.tvConnectionProblem);
+        llConnectionProblem = findViewById(R.id.llConnectionProblem);
+        btnConnectionError = findViewById(R.id.btnConnectionError);
 
-        NetworkController controller = new NetworkController();
+        controller = new NetworkController();
 
         setupRecyclerView();
-        controller.onStart();
+        controller.onStart("popularity.desc");
     }
 
     private void setupRecyclerView() {
@@ -57,6 +61,23 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        switch (id) {
+            case R.id.byPopularMovies:
+                controller.onStart("popularity.desc");
+                break;
+
+            case R.id.byRating:
+                controller.onStart("vote_average.desc");
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -75,20 +96,26 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
 
     public class NetworkController implements Callback<DiscoverResponse> {
 
-        void onStart() {
+        void onStart(String sortBy) {
+            filterQuery = sortBy;
+
+            llConnectionProblem.setVisibility(View.GONE);
+            pbLoadingMovies.setVisibility(View.VISIBLE);
+            recyclerMovies.setVisibility(View.GONE);
+
             NetworkUtils networkUtils = new NetworkUtils();
 
             Retrofit retrofit = (networkUtils.buildRetrofit());
             MovieService apiService = retrofit.create(MovieService.class);
 
-            Call<DiscoverResponse> movieList = apiService.discoverMovies(BuildConfig.API_KEY, "popularity.desc");
+            Call<DiscoverResponse> movieList = apiService.discoverMovies(BuildConfig.API_KEY, sortBy);
             movieList.enqueue(this);
         }
 
         @Override
         public void onResponse(Call<DiscoverResponse> call, Response<DiscoverResponse> response) {
             pbLoadingMovies.setVisibility(View.GONE);
-            tvConnectionProblem.setVisibility(View.GONE);
+            llConnectionProblem.setVisibility(View.GONE);
             recyclerMovies.setVisibility(View.VISIBLE);
 
             ArrayList<MovieModel> movieList = response.body().getResults();
@@ -99,9 +126,14 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
         public void onFailure(Call<DiscoverResponse> call, Throwable t) {
             recyclerMovies.setVisibility(View.GONE);
             pbLoadingMovies.setVisibility(View.GONE);
-            tvConnectionProblem.setVisibility(View.VISIBLE);
+            llConnectionProblem.setVisibility(View.VISIBLE);
 
-            Log.d("Error", t.getMessage());
+            btnConnectionError.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    controller.onStart(filterQuery);
+                }
+            });
         }
     }
 }

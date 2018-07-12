@@ -1,4 +1,7 @@
 <resources>
-    <string name="app_name">PopularMovies</string>
-    <string name="connection_problem">Sem conexão com a internet!</string>
+    <string name="app_name">Popular Movies</string>
+    <string name="connection_problem">Sorry, we can not establish connection with server</string>
+    <string name="menu_popular_movies">Popular Movies</string>
+    <string name="menu_rating">Rating</string>
+    <string name="btn_tryagain">Retry</string>
 </resources>
