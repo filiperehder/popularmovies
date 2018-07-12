@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -42,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
         pbLoadingMovies = findViewById(R.id.pbLoadingMovies);
         llConnectionProblem = findViewById(R.id.llConnectionProblem);
         btnConnectionError = findViewById(R.id.btnConnectionError);
+
         controller = new NetworkController();
 
         setupRecyclerView();
@@ -50,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
 
     private void setupRecyclerView() {
         recyclerMovies = findViewById(R.id.rvMovies);
-        recyclerMovies.setLayoutManager(new GridLayoutManager(this, 2));
+        recyclerMovies.setLayoutManager(new GridLayoutManager(this, numberOfColumns()));
 
         adapterMovies = new MoviesAdapter(this);
         recyclerMovies.setAdapter(adapterMovies);
@@ -93,6 +95,17 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
         startActivity(intent);
     }
 
+    private int numberOfColumns() {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+
+        int widthDivider = 400;
+        int width = displayMetrics.widthPixels;
+        int nColumns = width / widthDivider;
+        if (nColumns < 2) return 2;
+        return nColumns;
+    }
+
     public class NetworkController implements Callback<DiscoverResponse> {
 
         void onStart(String sortBy) {
@@ -107,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements OnItemClickListen
             Retrofit retrofit = (networkUtils.buildRetrofit());
             MovieService apiService = retrofit.create(MovieService.class);
 
-            Call<DiscoverResponse> movieList = apiService.discoverMovies(BuildConfig.API_KEY, sortBy);
+            Call<DiscoverResponse> movieList = apiService.discoverMovies(sortBy, BuildConfig.API_KEY);
             movieList.enqueue(this);
         }
 

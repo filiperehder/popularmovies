@@ -9,6 +9,6 @@
     <string name="image_path_185">http://image.tmdb.org/t/p/w185/</string>
 
 
-    <string name="filterPopularity">popularity.desc/</string>
-    <string name="filterRating">vote_average.desc</string>
+    <string name="filterPopularity">popular</string>
+    <string name="filterRating">top_rated</string>
 </resources>

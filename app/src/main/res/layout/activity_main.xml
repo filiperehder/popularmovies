@@ -42,9 +42,9 @@
     <android.support.v7.widget.RecyclerView
         android:visibility="gone"
         android:id="@+id/rvMovies"
-        android:paddingStart="8dp"
-        android:paddingEnd="8dp"
-        android:paddingTop="8dp"
+        android:paddingStart="@dimen/size8dp"
+        android:paddingEnd="@dimen/size8dp"
+        android:paddingTop="@dimen/size8dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:layoutManager="android.support.v7.widget.GridLayoutManager"
