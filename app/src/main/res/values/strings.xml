@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">PopularMovies</string>
+    <string name="connection_problem">Sem conexão com a internet!</string>
+</resources>
